@@ -1,64 +1,47 @@
 import pyglet
 from pyglet.gl import *
-# from pyglet import clock
 from pyglet.window import key
-
 import pyshaders
-
 import win32gui
+
 
 # Window creation
 style = pyglet.window.Window.WINDOW_STYLE_BORDERLESS
 window = pyglet.window.Window(width=960, height=540,
                               style=style, resizable=False)
-window.set_size(1920, 1080)
+window.set_size(3840,2160)
 
 # set behind icons
-
 progman = win32gui.FindWindow("Progman", None)
 result = win32gui.SendMessageTimeout(progman, 0x052c, 0, 0, 0x0, 1000)
 workerw = 0
-
 
 def _enum_windows(tophandle, topparamhandle):
     p = win32gui.FindWindowEx(tophandle, 0, "SHELLDLL_DefView", None)
     if p != 0:
         workerw = win32gui.FindWindowEx(0, tophandle, "WorkerW", None)
-
         pyglet_hwnd = window._hwnd
         # pyglet_hdc = win32gui.GetWindowDC(pyglet_hwnd)
         win32gui.SetParent(pyglet_hwnd, workerw)
-
     return True
-
 
 win32gui.EnumWindows(_enum_windows, 0)  # sets window behind icons
 
 
 # Shader creation
 vert = './shader/vert.glsl'
-
-# frag = './shader/frag/7.glsl'
-# frag = './shader/frag/9.glsl'
-# frag = './shader/frag/10.glsl'
-# frag = './shader/frag/11.glsl'
-# frag = './shader/frag/pastel-psx.glsl'
-# frag = './shader/frag/space2.glsl'
-frag = './shader/frag/trees.glsl'
+frag = './shader/frag/mobius_forced.glsl'
 shader = pyshaders.from_files_names(vert, frag)
 shader.use()
 
-framerate = 60
-timescale = 0.5
-
+framerate = 24
+timescale = 1.0
 
 def _update_shader_time(dt):
     if 'time' in shader.uniforms:
         shader.uniforms.time += dt * timescale
 
-
 pyglet.clock.schedule_interval(_update_shader_time, 1 / framerate)
-
 
 vert_count = 70000
 vert_mode = GL_TRIANGLES
@@ -73,6 +56,20 @@ tris = pyglet.graphics.vertex_list(
     6,
     ('v2f', (-1, -1, -1, 1, 1, -1, 1, 1, -1, 1, 1, -1))
 )
+
+if 'AA' in shader.uniforms:
+    shader.uniforms.AA = 1
+if 'iApply' in shader.uniforms:
+    shader.uniforms.iApply = 1
+if 'iHyberbolic' in shader.uniforms:
+    shader.uniforms.iHyperbolic = 1
+if 'iElliptic' in shader.uniforms:
+    shader.uniforms.iElliptic = 1
+if 'iMobius.A' in shader.uniforms:
+    shader.uniforms["iMobius.A"].set((-1,0.0))
+    shader.uniforms["iMobius.B"].set((1,0.0))
+    shader.uniforms["iMobius.C"].set((-1,0.0))
+    shader.uniforms["iMobius.D"].set((-1,0.0))
 
 
 @window.event
