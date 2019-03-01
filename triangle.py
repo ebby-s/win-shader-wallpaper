@@ -1,26 +1,20 @@
 # -*- coding: utf-8 -*-
 """
-
-    Simple coloring shader example.
-
-    Press any number key (not on the numpad) to change the triangle color
-
+Simple coloring shader example.
+Press any number key (not on the numpad) to change the triangle color
 """
+
 import pyglet
 from pyglet.gl import GL_TRIANGLES
 from pyglet.window import key
-    
-try:
-    import pyshaders
+try: import pyshaders
 except ImportError:
     import sys
     from os import getcwd
     from os.path import dirname
     sys.path.append(dirname(getcwd()))
-    
     import pyshaders
-    
-    
+
 frag = """
 #version 330 core
 
@@ -44,11 +38,9 @@ void main()
   gl_Position = vec4(vert, 1, 1);
 }
 """
-    
-    
+
 # Window creation
 window = pyglet.window.Window(visible=True, width=300, height=300, resizable=True)
-
 
 #Shader creation
 shader = pyshaders.from_string(vert, frag)
