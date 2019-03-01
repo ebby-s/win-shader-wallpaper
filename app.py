@@ -1,14 +1,11 @@
-import pyglet
+import pyglet, pyshaders, win32gui
 from pyglet.gl import *
 from pyglet.window import key
-import pyshaders
-import win32gui
 
 
 # Window creation
 style = pyglet.window.Window.WINDOW_STYLE_BORDERLESS
-window = pyglet.window.Window(width=960, height=540,
-                              style=style, resizable=False)
+window = pyglet.window.Window(width=960,height=540,style=style,resizable=False)
 window.set_size(3840,2160)
 
 # set behind icons
@@ -21,16 +18,14 @@ def _enum_windows(tophandle, topparamhandle):
     if p != 0:
         workerw = win32gui.FindWindowEx(0, tophandle, "WorkerW", None)
         pyglet_hwnd = window._hwnd
-        # pyglet_hdc = win32gui.GetWindowDC(pyglet_hwnd)
+        pyglet_hdc = win32gui.GetWindowDC(pyglet_hwnd)# 
         win32gui.SetParent(pyglet_hwnd, workerw)
     return True
-
 win32gui.EnumWindows(_enum_windows, 0)  # sets window behind icons
-
 
 # Shader creation
 vert = './shader/vert.glsl'
-frag = './shader/frag/mobius_forced.glsl'
+frag = './shader/frag/mobius_test.glsl'
 shader = pyshaders.from_files_names(vert, frag)
 shader.use()
 
@@ -40,22 +35,16 @@ timescale = 1.0
 def _update_shader_time(dt):
     if 'time' in shader.uniforms:
         shader.uniforms.time += dt * timescale
-
 pyglet.clock.schedule_interval(_update_shader_time, 1 / framerate)
 
 vert_count = 70000
 vert_mode = GL_TRIANGLES
 vertex_list = pyglet.graphics.vertex_list(
-    vert_count, 'v3f', 'c4B', 't2f', 'n3f'
-)
-
+    vert_count, 'v3f', 'c4B', 't2f', 'n3f')
 if 'vertexCount' in shader.uniforms:
     shader.uniforms.vertexCount = vert_count
-
 tris = pyglet.graphics.vertex_list(
-    6,
-    ('v2f', (-1, -1, -1, 1, 1, -1, 1, 1, -1, 1, 1, -1))
-)
+    6,('v2f', (-1, -1, -1, 1, 1, -1, 1, 1, -1, 1, 1, -1)))
 
 if 'AA' in shader.uniforms:
     shader.uniforms.AA = 1
@@ -78,7 +67,6 @@ def on_draw():
     gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
     tris.draw(GL_TRIANGLES)
 
-
 @window.event
 def on_mouse_motion(x, y, dx, dy):
     nx = -(-x + window.width / 2) / (window.width / 2)
@@ -87,7 +75,6 @@ def on_mouse_motion(x, y, dx, dy):
     if 'mouse' in shader.uniforms:
         shader.uniforms['mouse'] == (nx, ny)
 
-
 @window.event
 def on_key_press(symbol, modifiers):
     if 'time' in shader.uniforms:
@@ -95,12 +82,10 @@ def on_key_press(symbol, modifiers):
     if symbol == key.Q:
         pyglet.app.exit()
 
-
 @window.event
 def on_resize(width, height):
     if 'resolution' in shader.uniforms:
         shader.uniforms.resolution = (width, height)
-
 
 if __name__ == '__main__':
     pyglet.app.run()
