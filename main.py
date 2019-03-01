@@ -4,8 +4,6 @@ from PyQt5 import QtWidgets, QtGui, QtCore, uic
 from PyQt5.QtCore import QTimer, Qt
 import qtmodern.styles
 import qtmodern.windows
-
-
 import pyglet
 import shader
 
