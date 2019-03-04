@@ -7,17 +7,14 @@ import qtmodern.windows
 import pyglet
 import shader
 
-
 def catch_exceptions(t, val, tb):
     QtWidgets.QMessageBox.critical(None,
                                    "An exception was raised",
                                    "Exception type: {}\n{}".format(t, val))
     old_hook(t, val, tb)
 
-
 old_hook = sys.excepthook
 sys.excepthook = catch_exceptions
-
 
 class ShaderGalleryItem(QtWidgets.QToolButton):
     shader_id = None
@@ -31,7 +28,6 @@ class ShaderGalleryItem(QtWidgets.QToolButton):
             print('changing shader to', self.shader_id)
         # QtWidgets.QToolButton.mousePressEvent(self, event)
         # return
-
 
 class MyWindow(QtWidgets.QMainWindow):
     def __init__(self):
