@@ -1,7 +1,4 @@
-import pyglet
-import pyshaders
-import win32gui
-import win32api
+import pyglet, pyshaders, win32gui, win32api, json
 from pyglet.gl import *
 from pyglet import gl
 # Create template config
@@ -9,8 +6,6 @@ config = gl.Config()
 config.stencil_size = 8
 config.aux_buffers = 4
 config.double_buffer = True
-
-import json
 
 vert_shader = '''
 #version 330 core
