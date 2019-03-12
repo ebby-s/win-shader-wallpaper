@@ -1,6 +1,5 @@
 import urllib.request
-import json
-import requests
+import json, requests
 
 def save_from_list():
     shader_list_file = open('shader.list')
@@ -10,15 +9,13 @@ def save_from_list():
             continue
         if line.startswith('#'):
             continue
-
         item = line.split(' ')
         item_id, title = item[0], item[-1].rstrip()
-
         shader_list.append((item_id, title))
+        
     for s in shader_list:
         shader_id = s[0]
         shader_title = s[1]
-
         try:
             with open(f'.\\shader\\glslsandbox\\{shader_title}.glsl') as handler:
                 s_id = shader_id.split('.')[0]
@@ -114,4 +111,4 @@ def _rename_images():
 if __name__ == '__main__':
     # save_from_list(shader_list)
     #_dump_from_glslsandbox()
-    _rename_images()
+    '''_rename_images()'''
