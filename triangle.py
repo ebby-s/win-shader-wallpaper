@@ -40,21 +40,21 @@ void main()
 """
 
 # Window creation
-window = pyglet.window.Window(visible=True, width=300, height=300, resizable=True)
+window = pyglet.window.Window(visible=True,width=300,height=300,resizable=True)
 
 #Shader creation
-shader = pyshaders.from_string(vert, frag)
+shader = pyshaders.from_string(vert,frag)
 shader.use()
 
 #Triangle creation
-tris = pyglet.graphics.vertex_list(3,('v2f',(0.0, 0.95, 0.95, -0.95, -0.95, -0.95)),)
+tris = pyglet.graphics.vertex_list(3,('v2f',(0.0,0.95,0.95,-0.95,-0.95,-0.95)),)
 
 #Uniform colors
-color_map = {key._0: (1.0, 1.0, 1.0), key._1: (1.0, 0.0, 0.0),
-             key._2: (0.0, 1.0, 0.0), key._3: (0.0, 0.0, 1.0),
-             key._4:(1.0, 1.0, 0.0), key._5:(1.0, 0.0, 1.0),
-             key._6:(0.0, 1.0, 1.0), key._7:(0.5, 0.5, 0.5),
-             key._8:(1.0, 0.7, 0.0), key._9:(0.1, 0.7, 0.1)}
+color_map = {key._0:(1.0,1.0,1.0), key._1:(1.0,0.0,0.0),
+             key._2:(0.0,1.0,0.0), key._3:(0.0,0.0,1.0),
+             key._4:(1.0,1.0,0.0), key._5:(1.0,0.0,1.0),
+             key._6:(0.0,1.0,1.0), key._7:(0.5,0.5,0.5),
+             key._8:(1.0,0.7,0.0), key._9:(0.1,0.7,0.1)}
 
 @window.event
 def on_draw():
@@ -62,7 +62,7 @@ def on_draw():
     tris.draw(GL_TRIANGLES)
     
 @window.event
-def on_key_press(symbol, modifiers):
+def on_key_press(symbol,modifiers):
     if symbol in color_map.keys():
         shader.uniforms.color = color_map[symbol]
 
