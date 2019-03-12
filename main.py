@@ -1,17 +1,14 @@
-import sys
-import glob
+import sys, glob, pyglet, shader
 from PyQt5 import QtWidgets, QtGui, QtCore, uic
 from PyQt5.QtCore import QTimer, Qt
 import qtmodern.styles
 import qtmodern.windows
-import pyglet
-import shader
 
-def catch_exceptions(t, val, tb):
-    QtWidgets.QMessageBox.critical(None,
-                                   "An exception was raised",
-                                   "Exception type: {}\n{}".format(t, val))
-    old_hook(t, val, tb)
+
+def catch_exceptions(t,val,tb):
+    QtWidgets.QMessageBox.critical(None,"An exception was raised",
+                                   "Exception type: {}\n{}".format(t,val))
+    old_hook(t,val,tb)
 
 old_hook = sys.excepthook
 sys.excepthook = catch_exceptions
@@ -22,7 +19,7 @@ class ShaderGalleryItem(QtWidgets.QToolButton):
 
     def mousePressEvent(self, event):
         print(self.shader_id)
-       # if event.button() == Qt.LeftButton:
+        # if event.button() == Qt.LeftButton:
         if self.sw:
             self.sw.change_shader(f'.\\shader\dump\\source\\{self.shader_id}.glsl')
             print('changing shader to', self.shader_id)
