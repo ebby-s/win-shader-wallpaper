@@ -6,7 +6,7 @@ from pyglet.window import key
 # Window creation
 style = pyglet.window.Window.WINDOW_STYLE_BORDERLESS
 window = pyglet.window.Window(width=960,height=540,style=style,resizable=False)
-window.set_size(3840,2160)
+window.set_size(1920,1080)
 
 # set behind icons
 progman = win32gui.FindWindow("Progman", None)
