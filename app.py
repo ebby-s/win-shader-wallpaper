@@ -25,11 +25,12 @@ win32gui.EnumWindows(_enum_windows, 0)  # sets window behind icons
 
 # Shader creation
 vert = './shader/vert.glsl'
-frag = './shader/frag/mobius_test.glsl'
+frag = './glslsandbox_converted/source/46931.glsl'
+#frag = './shader/frag/red-pixi.glsl'
 shader = pyshaders.from_files_names(vert, frag)
 shader.use()
 
-framerate = 24
+framerate = 30
 timescale = 1.0
 
 def _update_shader_time(dt):
