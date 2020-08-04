@@ -183,15 +183,15 @@ vec3 render(vec3 ray_pos, vec3 ray_direction)
     dif *= softshadow( pos, lig, 0.3, 4.5 );
     dom *= softshadow( pos, ref, 0.3, 2.5 ) ;
     
-    lin += 2.30 * dif * vec3(1.00,0.80,0.55) ;
+    lin += 2.30 * dif * vec3(0.69,0.60,0.40) ;
     lin += 2.00 * spec * vec3(1.00,0.90,0.70) * dif ;
     lin += 0.20 * amb * vec3(0.40,0.60,1.00) * occ ;
-    lin += 0.45 * fre * vec3(1.00,1.00,1.00) * occ ;
-    lin += 0.20 * dom * vec3(0.40,0.60,1.00) ;
+    lin += 0.45 * fre * vec3(1.00,0.40,0.00) * occ ;
+    lin += 0.20 * dom * vec3(1.00,0.40,0.00) ;
    
     col = col * lin;
     
-    col = mix( col, vec3(0.6,0.9,1.0), 1.0 - exp( -0.00035*d*d*d ) );
+    col = mix( col, vec3(0.8,0.3,0.0), 1.0 - exp( -0.00035*d*d*d ) );
     
     return vec3( clamp(col, 0.0, 1.0));    
     

@@ -47,7 +47,7 @@ shader = pyshaders.from_string(vert,frag)
 shader.use()
 
 #Triangle creation
-tris = pyglet.graphics.vertex_list(3,('v2f',(0.0,0.95,0.95,-0.95,-0.95,-0.95)),)
+tris = pyglet.graphics.vertex_list(3,('v2f',(0.0,0.95, 0.95,-0.95, -0.95,-0.95)),)
 
 #Uniform colors
 color_map = {key._0:(1.0,1.0,1.0), key._1:(1.0,0.0,0.0),

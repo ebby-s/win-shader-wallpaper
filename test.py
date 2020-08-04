@@ -1,4 +1,4 @@
-import pyglet, pyshaders, win32gui, win32api, json
+import pyglet, pyshaders, win32gui, win32api
 from pyglet.gl import *
 from pyglet import gl
 # Create template config
@@ -25,8 +25,7 @@ class ShaderWindow(pyglet.window.Window):
         print("hwnd", self._hwnd)
 
         vert = './shader/vert.glsl'
-        frag = './shader/frag/red-pixi.glsl'
-        #self.current_shader_id = 46921
+        frag = './glslsandbox_converted/source/47478.glsl'
         self.shader_program = pyshaders.from_files_names(vert, frag)
         self.shader_program.use()
 
@@ -35,7 +34,7 @@ class ShaderWindow(pyglet.window.Window):
 
         self.update_mouse_pos = False
         self.timescale = 1
-        self.update_rate = 60
+        self.update_rate = 120
 
         self.backbuffer = None
         self.texture = pyglet.image.Texture.create(self.width, self.height, gl.GL_RGBA)
@@ -64,8 +63,6 @@ class ShaderWindow(pyglet.window.Window):
         print(width, height)
 
     def set_behind_icons(self):
-        self.set_size(1920,1080)
-        
         progman = win32gui.FindWindow("Progman", None)
         result = win32gui.SendMessageTimeout(progman, 0x052c, 0, 0, 0x0, 1000)
         workerw = 0
@@ -74,9 +71,11 @@ class ShaderWindow(pyglet.window.Window):
             p = win32gui.FindWindowEx(tophandle, 0, "SHELLDLL_DefView", None)
             if p != 0:
                 workerw = win32gui.FindWindowEx(0, tophandle, "WorkerW", None)
+
                 pyglet_hwnd = self._hwnd
-                pyglet_hdc = win32gui.GetWindowDC(pyglet_hwnd)# 
+                # pyglet_hdc = win32gui.GetWindowDC(pyglet_hwnd)
                 win32gui.SetParent(pyglet_hwnd, workerw)
+
             return True
 
         win32gui.EnumWindows(_enum_windows, 0)  # sets window behind icons
@@ -97,7 +96,7 @@ class ShaderWindow(pyglet.window.Window):
         '''
 
         # mouse
-        if self.update_mouse_pos:
+        if True:
             if 'mouse' in self.shader_program.uniforms:
                 win_x, win_y = self.get_location()
                 mx, my = win32api.GetCursorPos()
@@ -115,12 +114,11 @@ class ShaderWindow(pyglet.window.Window):
 
     def change_shader(self, shader_file):
         sf = open(shader_file)
-        sf_json = json.loads(sf.read())
-        frag_shader = sf_json['code']
-        #self.current_shader_id = int(sf_json['id'])
+        frag_shader = sf.read()
+
 
         self.shader_program.use()
-        # self.shader_program.clear()
+        self.shader_program.clear()
         # del self.shader_program
         # self.shader_program = pyshaders.from_files_names(vert, shader_file)
         try:
@@ -162,13 +160,33 @@ def on_draw():
     gl.glClearColor(0, 0, 0, 0)
     gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
     # vertex_list.draw(vert_mode)
+
     # window.clear()
     tris.draw(GL_TRIANGLES)
 '''
 
+
+def update_current_frag(current_frag):
+    if current_frag == 0: return 46921
+    current_frag = (current_frag + 1) % 47521
+    if current_frag == 0: current_frag = 46921
+    return current_frag
+
 if __name__ == '__main__':
-    # style = pyglet.window.Window.WINDOW_STYLE_BORDERLESS
-    window = ShaderWindow(width=960, height=540, resizable=False)
+    style = pyglet.window.Window.WINDOW_STYLE_BORDERLESS
+    window = ShaderWindow(width=960, height=540, resizable=True)
+    global current_frag
+    current_frag = 0
+    
+    @window.event
+    def on_key_press(symbol, modifiers):
+        if symbol == pyglet.window.key.Q:
+            pyglet.app.exit()
+            window.on_close()
+        global current_frag
+        current_frag = update_current_frag(current_frag)
+        window.change_shader('.\glslsandbox_converted\source\%d.glsl' % current_frag)
+    
     pyglet.app.run()
 
 

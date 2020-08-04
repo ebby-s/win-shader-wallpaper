@@ -25,8 +25,8 @@ win32gui.EnumWindows(_enum_windows, 0)  # sets window behind icons
 
 # Shader creation
 vert = './shader/vert.glsl'
-frag = './glslsandbox_converted/source/46931.glsl'
-#frag = './shader/frag/red-pixi.glsl'
+#frag = './glslsandbox_converted/source/46931.glsl'
+frag = './shader/frag/light-sabre.glsl'
 shader = pyshaders.from_files_names(vert, frag)
 shader.use()
 

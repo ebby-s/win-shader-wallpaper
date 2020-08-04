@@ -13,18 +13,16 @@ def catch_exceptions(t,val,tb):
 old_hook = sys.excepthook
 sys.excepthook = catch_exceptions
 
+
 class ShaderGalleryItem(QtWidgets.QToolButton):
     shader_id = None
     sw = None
 
     def mousePressEvent(self, event):
-        print(self.shader_id)
-        # if event.button() == Qt.LeftButton:
-        if self.sw:
-            self.sw.change_shader(f'.\\shader\dump\\source\\{self.shader_id}.glsl')
+        if event.button() == Qt.LeftButton and self.sw:
+            self.sw.change_shader(f'.\\glslsandbox_dump\\source\\{self.shader_id}.glsl')
             print('changing shader to', self.shader_id)
-        # QtWidgets.QToolButton.mousePressEvent(self, event)
-        # return
+        QtWidgets.QToolButton.mousePressEvent(self, event)# 
 
 class MyWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -44,7 +42,7 @@ class MyWindow(QtWidgets.QMainWindow):
         # self.setAutoFillBackground(True)
         self.setStyleSheet(css)
 
-        dump_dir = '.\\shader\dump\\'
+        dump_dir = '.\\glslsandbox_dump\\'
         self.list_of_shaders = glob.glob(f'{dump_dir}source\\*.glsl')
 
         # self.shaderComboBox.addItems([s.split('\\')[-1] for s in self.list_of_shaders])
@@ -60,8 +58,8 @@ class MyWindow(QtWidgets.QMainWindow):
 
         self.forceButton.clicked.connect(self.force_clicked)
 
-        # style = pyglet.window.Window.WINDOW_STYLE_BORDERLESS
-        self.sw = shader.ShaderWindow(width=960, height=540, config=shader.config, resizable=True)
+        style = pyglet.window.Window.WINDOW_STYLE_BORDERLESS
+        self.sw = shader.ShaderWindow(width=960, height=540, config=shader.config, style=style, resizable=False)
         self.timer = QTimer()
         self.timer.timeout.connect(self.pyglet_loop)
         self.timer.start(0)
@@ -69,40 +67,42 @@ class MyWindow(QtWidgets.QMainWindow):
         self.resWidth.setText(str(self.sw.screen.width))
         self.resHeight.setText(str(self.sw.screen.height))
 
-        # self.gallery_window = qtmodern.windows.ModernWindow(IndicSelectWindow(parent=self, shader_window=self.sw))
-
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
 
-
-        self.scrollArea = QtWidgets.QScrollArea(self)
+        self.scrollArea = QtWidgets.QScrollArea(self.groupBoxOne)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.scrollArea.setWidgetResizable(True)
         # self.galleryContainerLayout = QtWidgets.QHBoxLayout(self)
         self.gridLayout = QtWidgets.QGridLayout(self.scrollAreaWidgetContents)
-        self.galleryContainerLayout.addWidget(self.scrollArea)
+        # self.galleryContainerLayout.addWidget(self.scrollArea)
 
         w = 100
         h = 50
         row = 0
         for i, s in enumerate(self.list_of_shaders):
             shader_id = s.split('\\')[-1].split('.')[0]
-            print(f'{dump_dir}thumbs\\{shader_id}.png')
             button = ShaderGalleryItem()
             button.sw = self.sw
             button.shader_id = shader_id
             button.setFixedSize(w + 4, h + 4)
             button.setIcon(QtGui.QIcon(f'{dump_dir}thumbs\\{shader_id}.png'))
             button.setIconSize(QtCore.QSize(w, h))
-            # button.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
-            # button.setText(shader_id)
+            button.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)# 
+            button.setText(shader_id)# 
 
-            # print(s)
             if i % 3 == 0:
                 row += 1
             self.gridLayout.addWidget(button, row, i % 3)
 
-        self.scrollAreaWidgetContents.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        # self.show()
+        self.scrollAreaWidgetContents.setSizePolicy(QtWidgets.QSizePolicy.Expanding,
+                                                    QtWidgets.QSizePolicy.Expanding)
+        #self.scrollAreaWidgetContents.resize(1000, 800)
+        #self.scrollAreaWidgetContents.adjustSize()
+        #self.gridLayout.setRowMinimumHeight(0, 800)
+        self.scrollArea.setFixedHeight(400)
+        self.scrollArea.setFixedWidth(360)
+        self.groupBoxOne.setAlignment(QtCore.Qt.AlignCenter)
+        self.show()# 
 
     def show_gallery(self):
         self.gallery_window.show()
@@ -158,7 +158,6 @@ if __name__ == '__main__':
     # "modern" style
     qtmodern.styles.dark(app)
     mw = qtmodern.windows.ModernWindow(window)
-    # window.gallery_window.show()
     mw.show()
 
     # window.show()
